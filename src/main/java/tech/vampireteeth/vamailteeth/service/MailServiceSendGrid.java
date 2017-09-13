@@ -8,6 +8,7 @@ import tech.vampireteeth.vamailteeth.model.MailResponse;
 @Service("mailServiceSendGrid")
 public class MailServiceSendGrid implements MailService {
 
+    private static final String API_KEY = "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";
 
     @Override
     public MailResponse sendMail(MailRequest mailRequest) {
