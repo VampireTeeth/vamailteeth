@@ -19,7 +19,7 @@ public class MailServiceMailgun implements MailService {
 
     @Override
     public MailResponse sendMail(MailRequest mailRequest) {
-        final String apiKey = "key-f4786f480ac495413417ce279aeff89f";
+        final String apiKey = "api+key-f4786f480ac495413417ce279aeff89f";
         final byte[] encodedKey = Base64.encodeBase64(apiKey.getBytes());
         String to = mailRequest.to();
         String cc = mailRequest.cc();
