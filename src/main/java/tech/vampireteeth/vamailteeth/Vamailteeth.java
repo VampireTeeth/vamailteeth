@@ -2,6 +2,7 @@ package tech.vampireteeth.vamailteeth;
 
 import javax.annotation.Resource;
 
+import org.bson.Document;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,6 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 
 import tech.vampireteeth.vamailteeth.model.MailRequest;
 import tech.vampireteeth.vamailteeth.model.MailResponse;
@@ -38,5 +46,19 @@ public class Vamailteeth {
 
     public static void main(String[] args) {
         SpringApplication.run(Vamailteeth.class, args);
+    }
+    
+    
+    private static void loadDB() {
+        MongoClientURI mongoUri = new MongoClientURI(System.getenv("MONGODB_URI"));
+        MongoClient mongoClient = new MongoClient(mongoUri);
+        MongoDatabase db = mongoClient.getDatabase(mongoUri.getDatabase());
+        MongoCollection<Document> vamailteeth = db.getCollection("vamailteeth");
+        FindIterable<Document> find = vamailteeth.find(new Document("name", "api_keys"));
+        Document doc = null;
+        MongoCursor<Document> it = find.iterator();
+        for(;it.hasNext();) {
+            doc = it.next();
+        }
     }
 }
