@@ -9,41 +9,46 @@ public class MailRequest {
     private List<String> tos = new ArrayList<>();
     private List<String> ccs = new ArrayList<>();
     private List<String> bccs = new ArrayList<>();
+    private String subject = null;
     private String text = null;
 
-    public MailRequest to(String to) {
-        tos.add(to.trim());
-        return this;
+    public void setTos(List<String> tos) {
+        this.tos = tos;
     }
 
-    public MailRequest cc(String cc) {
-        ccs.add(cc.trim());
-        return this;
+    public void setCcs(List<String> ccs) {
+        this.ccs = ccs;
     }
 
-    public MailRequest bcc(String bcc) {
-        bccs.add(bcc.trim());
-        return this;
+    public void setBccs(List<String> bccs) {
+        this.bccs = bccs;
     }
 
-    public MailRequest text(String text) {
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setText(String text) {
         this.text = text;
-        return this;
     }
 
     public String to() {
         return String.join(DELIMITER, tos);
     }
-    
+
     public String cc() {
         return String.join(DELIMITER, ccs);
     }
-    
+
     public String bcc() {
         return String.join(DELIMITER, bccs);
     }
-    
+
     public String text() {
         return text;
+    }
+
+    public String subject() {
+        return subject;
     }
 }
