@@ -58,7 +58,11 @@ public class Vamailteeth {
 
 
     private static ApiKeys loadApiKeys() throws ApiKeysNotLoadedFromDBException {
-        MongoClientURI mongoUri = new MongoClientURI(System.getProperty("MONGODB_URI"));
+        final String mongodbUri= System.getenv("MONGODB_URI");
+        if (mongodbUri == null || "".equals(mongodbUri)) {
+            throw new ApiKeysNotLoadedFromDBException("MongoDB URI is not found");
+        }
+        MongoClientURI mongoUri = new MongoClientURI(mongodbUri);
         MongoClient mongoClient = new MongoClient(mongoUri);
         try {
             MongoDatabase db = mongoClient.getDatabase(mongoUri.getDatabase());
