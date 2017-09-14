@@ -1,6 +1,5 @@
 package tech.vampireteeth.vamailteeth.service;
 
-
 import static tech.vampireteeth.vamailteeth.service.Constants.INTERNAL_SERVER_ERROR;
 import static tech.vampireteeth.vamailteeth.service.Constants.SUCCESS;
 
@@ -21,9 +20,6 @@ public class MailSender {
 
     @Resource
     protected MailRequestValidateService mailRequestValidateService;
-
-    @Resource
-    protected MailRequestTransformer mailRequestTransformer; 
 
     public MailResponse send(MailService mailService, MailRequest mailRequest, String apiKey) {
 
