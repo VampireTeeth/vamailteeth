@@ -54,7 +54,7 @@ public class Vamailteeth {
         try {
             apiKeys = loadApiKeys();
         } catch (ApiKeysNotLoadedFromDBException e) {
-            e.printStackTrace();
+            LOG.error(e);
             System.exit(1);
         }
         SpringApplication.run(Vamailteeth.class, args);
@@ -63,7 +63,6 @@ public class Vamailteeth {
 
     private static ApiKeys loadApiKeys() throws ApiKeysNotLoadedFromDBException {
         final String mongodbUri= System.getenv("MONGODB_URI");
-        LOG.debug("Mongo DB URI: "+mongodbUri);
         if (mongodbUri == null || "".equals(mongodbUri)) {
             throw new ApiKeysNotLoadedFromDBException("MongoDB URI is not found");
         }
