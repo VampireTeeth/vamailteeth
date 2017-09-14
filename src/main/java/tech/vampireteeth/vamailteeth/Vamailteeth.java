@@ -18,6 +18,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
+import tech.vampireteeth.vamailteeth.exceptions.ApiKeysNotLoadedFromDBException;
 import tech.vampireteeth.vamailteeth.model.MailRequest;
 import tech.vampireteeth.vamailteeth.model.MailResponse;
 import tech.vampireteeth.vamailteeth.service.MailService;
@@ -34,6 +35,7 @@ public class Vamailteeth {
     private MailService mailServiceSendGrid;
 
 
+    private static ApiKeys apiKeys;
 
     @RequestMapping(value = "/mail", method = RequestMethod.POST, consumes = {"application/json"})
     public MailResponse mail(@RequestBody MailRequest mailRequest) {
@@ -45,20 +47,49 @@ public class Vamailteeth {
     }
 
     public static void main(String[] args) {
+        try {
+            apiKeys = loadApiKeys();
+        } catch (ApiKeysNotLoadedFromDBException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
         SpringApplication.run(Vamailteeth.class, args);
     }
-    
-    
-    private static void loadDB() {
+
+
+    private static ApiKeys loadApiKeys() throws ApiKeysNotLoadedFromDBException {
         MongoClientURI mongoUri = new MongoClientURI(System.getenv("MONGODB_URI"));
         MongoClient mongoClient = new MongoClient(mongoUri);
-        MongoDatabase db = mongoClient.getDatabase(mongoUri.getDatabase());
-        MongoCollection<Document> vamailteeth = db.getCollection("vamailteeth");
-        FindIterable<Document> find = vamailteeth.find(new Document("name", "api_keys"));
-        Document doc = null;
-        MongoCursor<Document> it = find.iterator();
-        for(;it.hasNext();) {
-            doc = it.next();
+        try {
+            MongoDatabase db = mongoClient.getDatabase(mongoUri.getDatabase());
+            MongoCollection<Document> vamailteeth = db.getCollection("api_keys");
+            FindIterable<Document> find = vamailteeth.find();
+            Document doc = null;
+            MongoCursor<Document> it = find.iterator();
+            String mailgun = null, sendgrid = null;
+            for (; it.hasNext();) {
+                doc = it.next();
+                String name = doc.getString("name");
+                String value = doc.getString("value");
+                switch (name) {
+                    case "sendgrid":
+                        sendgrid = value;
+                        break;
+                    case "mailgun":
+                        mailgun = value;
+                        break;
+                    default:
+                }
+            }
+            if (mailgun != null && sendgrid != null) {
+                return new ApiKeys(mailgun, sendgrid);
+            }
+            throw new ApiKeysNotLoadedFromDBException(
+                    String.format("ApiKeys not loaded from DB: mailgun loaded? %s, sendgrid loaded? %s",
+                            mailgun != null ? "yes" : "no",
+                            sendgrid != null ? "yes" : "no"));
+        } finally {
+            mongoClient.close();
         }
     }
 }
