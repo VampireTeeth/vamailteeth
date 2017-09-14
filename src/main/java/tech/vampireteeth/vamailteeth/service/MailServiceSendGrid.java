@@ -9,7 +9,7 @@ import tech.vampireteeth.vamailteeth.model.MailResponse;
 public class MailServiceSendGrid implements MailService {
 
     @Override
-    public MailResponse sendMail(MailRequest mailRequest) {
+    public MailResponse sendMail(MailRequest mailRequest, String apiKey) {
         // TODO Auto-generated method stub
         return null;
     }

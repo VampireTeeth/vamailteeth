@@ -43,9 +43,9 @@ public class Vamailteeth {
 
     @RequestMapping(value = "/mail", method = RequestMethod.POST, consumes = {"application/json"})
     public MailResponse mail(@RequestBody MailRequest mailRequest) {
-        MailResponse mailResponse = mailServiceMailgun.sendMail(mailRequest);
+        MailResponse mailResponse = mailServiceMailgun.sendMail(mailRequest, apiKeys.getMailgun());
         if (mailResponse.isFailed()) {
-            mailResponse = mailServiceSendGrid.sendMail(mailRequest);
+            mailResponse = mailServiceSendGrid.sendMail(mailRequest, apiKeys.getSendgrid());
         }
         return mailResponse;
     }
@@ -87,6 +87,7 @@ public class Vamailteeth {
                         mailgun = value;
                         break;
                     default:
+                        //Nothing to be done here
                 }
             }
             if (mailgun != null && sendgrid != null) {

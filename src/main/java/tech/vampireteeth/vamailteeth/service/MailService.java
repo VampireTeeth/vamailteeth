@@ -5,5 +5,5 @@ import tech.vampireteeth.vamailteeth.model.MailResponse;
 
 public interface MailService {
 
-    MailResponse sendMail(MailRequest mailRequest);
+    MailResponse sendMail(MailRequest mailRequest, String apiKey);
 }
