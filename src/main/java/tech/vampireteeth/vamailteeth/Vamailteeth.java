@@ -62,6 +62,7 @@ public class Vamailteeth {
         if (mongodbUri == null || "".equals(mongodbUri)) {
             throw new ApiKeysNotLoadedFromDBException("MongoDB URI is not found");
         }
+        System.out.println("MongoDB URI:"+mongodbUri);
         MongoClientURI mongoUri = new MongoClientURI(mongodbUri);
         MongoClient mongoClient = new MongoClient(mongoUri);
         try {
