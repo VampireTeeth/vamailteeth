@@ -59,7 +59,7 @@ public class MailServiceMailgun implements MailService {
         } catch (ClientProtocolException e) {
             mailResponse.setMessage(e.getMessage());
             mailResponse.setFailed(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             mailResponse.setMessage(INTERNAL_SERVER_ERROR);
             mailResponse.setFailed(true);
         }
