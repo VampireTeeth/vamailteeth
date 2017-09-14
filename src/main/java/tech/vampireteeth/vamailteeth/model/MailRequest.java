@@ -51,4 +51,5 @@ public class MailRequest {
     public String subject() {
         return subject;
     }
+
 }
