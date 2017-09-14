@@ -1,13 +1,10 @@
 package tech.vampireteeth.vamailteeth.service;
 
-import static tech.vampireteeth.vamailteeth.service.Constants.INTERNAL_SERVER_ERROR;
-import static tech.vampireteeth.vamailteeth.service.Constants.SUCCESS;
-
 import javax.annotation.Resource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Request;
 import org.springframework.stereotype.Service;
 
 import tech.vampireteeth.vamailteeth.model.MailRequest;
@@ -23,29 +20,18 @@ public class MailServiceMailgun implements MailService {
 
     @Resource
     private MailRequestTransformer mailRequestTransformer; 
+    
+    @Resource
+    private MailSender mailSender;
 
     @Override
     public MailResponse sendMail(MailRequest mailRequest, String apiKey) {
-        MailResponse mailResponse = new MailResponse();
-        if (!mailRequestValidateService.validate(mailRequest, mailResponse)) {
-            return mailResponse;
-        }
+        return mailSender.send(this, mailRequest, apiKey);
+    }
 
-        try {
-            mailRequestTransformer.transform(this, mailRequest, apiKey).execute();
-            // No error means response returned with 200 status code
-            mailResponse.setFailed(false);
-            mailResponse.setMessage(SUCCESS);
-        } catch (ClientProtocolException e) {
-            LOG.error(e);
-            mailResponse.setFailed(true);
-            mailResponse.setMessage(e.getMessage());
-        } catch (Exception e) {
-            LOG.error(e);
-            mailResponse.setFailed(true);
-            mailResponse.setMessage(INTERNAL_SERVER_ERROR);
-        }
-        return mailResponse;
+    @Override
+    public Request request(MailRequest mailRequest, String apiKey) {
+        return mailRequestTransformer.transform(this, mailRequest, apiKey);
     }
 
 }
