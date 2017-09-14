@@ -35,6 +35,6 @@ public class MailRequestValidateService {
         }
         mailResponse.setFailed(failed);
         mailResponse.setMessage(String.join("|", failMsg));
-        return failed;
+        return !failed;
     }
 }
