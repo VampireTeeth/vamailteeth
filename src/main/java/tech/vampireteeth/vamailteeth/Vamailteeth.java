@@ -2,6 +2,8 @@ package tech.vampireteeth.vamailteeth;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,6 +38,8 @@ public class Vamailteeth {
 
 
     private static ApiKeys apiKeys;
+    
+    private static final Log LOG = LogFactory.getLog(Vamailteeth.class);
 
     @RequestMapping(value = "/mail", method = RequestMethod.POST, consumes = {"application/json"})
     public MailResponse mail(@RequestBody MailRequest mailRequest) {
@@ -59,10 +63,10 @@ public class Vamailteeth {
 
     private static ApiKeys loadApiKeys() throws ApiKeysNotLoadedFromDBException {
         final String mongodbUri= System.getenv("MONGODB_URI");
+        LOG.debug("Mongo DB URI: "+mongodbUri);
         if (mongodbUri == null || "".equals(mongodbUri)) {
             throw new ApiKeysNotLoadedFromDBException("MongoDB URI is not found");
         }
-        System.out.println("MongoDB URI:"+mongodbUri);
         MongoClientURI mongoUri = new MongoClientURI(mongodbUri);
         MongoClient mongoClient = new MongoClient(mongoUri);
         try {
