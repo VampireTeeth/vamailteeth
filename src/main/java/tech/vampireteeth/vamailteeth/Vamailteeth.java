@@ -8,6 +8,7 @@ import org.bson.Document;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,6 +42,7 @@ public class Vamailteeth {
     
     private static final Log LOG = LogFactory.getLog(Vamailteeth.class);
 
+    @CrossOrigin(origins = "https://vamailface.herokuapp.com")
     @RequestMapping(value = "/mail", method = RequestMethod.POST, consumes = {"application/json"})
     public MailResponse mail(@RequestBody MailRequest mailRequest) {
         MailResponse mailResponse = mailServiceMailgun.sendMail(mailRequest, apiKeys.getMailgun());
