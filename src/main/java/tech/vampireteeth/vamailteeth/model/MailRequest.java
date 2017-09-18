@@ -33,15 +33,15 @@ public class MailRequest {
     }
 
     public String to() {
-        return String.join(DELIMITER, tos);
+        return tos.isEmpty() ? null : String.join(DELIMITER, tos);
     }
 
     public String cc() {
-        return String.join(DELIMITER, ccs);
+        return ccs.isEmpty() ? null : String.join(DELIMITER, ccs);
     }
 
     public String bcc() {
-        return String.join(DELIMITER, bccs);
+        return bccs.isEmpty() ? null : String.join(DELIMITER, bccs);
     }
 
     public String text() {
